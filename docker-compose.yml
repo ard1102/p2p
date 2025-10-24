@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  indexing-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    container_name: p2p-indexing-server
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./config/docker.server.json:/app/config/config.json:ro
+      - ./logs/server:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket,sys; s=socket.socket(); s.settimeout(1); s.connect(('localhost',7000)); sys.exit(0)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  peer1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.peer
+    container_name: p2p-peer1
+    depends_on:
+      indexing-server:
+        condition: service_healthy
+    command: ["python", "-m", "peer.headless", "config/config.json", "--peer", "peer1"]
+    volumes:
+      - ./config/docker.peer.json:/app/config/config.json:ro
+      - ./config/docker.peer.json:/app/config/docker.peer.json:ro
+      - ./data/peer1:/app/data/peer1
+      - ./logs/peer1:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  peer2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.peer
+    container_name: p2p-peer2
+    depends_on:
+      indexing-server:
+        condition: service_healthy
+    command: ["python", "-m", "peer.headless", "config/config.json", "--peer", "peer2"]
+    volumes:
+      - ./config/docker.peer.json:/app/config/config.json:ro
+      - ./config/docker.peer.json:/app/config/docker.peer.json:ro
+      - ./data/peer2:/app/data/peer2
+      - ./logs/peer2:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1

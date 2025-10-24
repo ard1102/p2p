@@ -1,0 +1,39 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 7000
+  },
+  "peer": {
+    "base_port": 7100
+  },
+  "replication": {
+    "replication_factor": 2
+  },
+  "logging": {
+    "indexing_server": {
+      "log_file": "logs/indexing_server.log",
+      "max_bytes": 1048576,
+      "backup_count": 5,
+      "level": "INFO"
+    }
+  },
+  "data": {
+    "peers": {
+      "peer1": {
+        "shared_dir": "data/peer1/shared",
+        "download_dir": "data/peer1/downloaded"
+      },
+      "peer2": {
+        "shared_dir": "data/peer2/shared",
+        "download_dir": "data/peer2/downloaded"
+      }
+    },
+    "file_generation": {
+      "kb": { "count": 100, "size_bytes": 1024, "extension": "txt" },
+      "mb": { "count": 10, "size_bytes": 1048576, "extension": "bin" },
+      "gb": { "count": 0, "size_bytes": 1073741824, "extension": "bin" },
+      "chunk_size_bytes": 1048576,
+      "pattern": "{peer}_{size}_{num}.{ext}"
+    }
+  }
+}

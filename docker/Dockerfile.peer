@@ -1,0 +1,18 @@
+# Peer node image (minimal copy)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy only the code needed to run a peer
+COPY common/ /app/common/
+COPY peer/ /app/peer/
+COPY scripts/ /app/scripts/
+# Config is mounted at runtime, but copying is harmless and small
+COPY config/ /app/config/
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+
+# Entrypoint will be overridden per service to set the peer ID
+CMD ["python", "-m", "peer.peer", "config/config.json", "--peer", "peer1"]

@@ -1,0 +1,22 @@
+# Exclude local dev artifacts and caches
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude runtime data and logs (generated at run time)
+data/
+logs/
+
+# Exclude test output artifacts
+evaluation/results/
+
+# Exclude VCS and host-only files
+.git/
+.gitignore
+
+# Misc large or transient files
+*.log
+*.tmp
+*.cache

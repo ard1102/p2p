@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+
+# Virtual envs
+.venv/
+venv/
+ENV/
+env/
+.Python
+
+# Build, dist, tooling caches
+build/
+dist/
+.eggs/
+.cache/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.coverage*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+
+# Project artifacts not tracked
+# Data and logs are produced during runs and Compose tests
+/data/
+/logs/
+/evaluation/results/
+
+# Docker
+# Node, UI, or other common extras (future-proofing)
+node_modules/
+*.log
