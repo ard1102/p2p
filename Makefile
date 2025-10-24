@@ -22,7 +22,7 @@ help:
 	@echo "  docker-clean     - Stop and remove volumes and orphans"
 
 setup:
-	$(PYTHON) -c "import os; [os.makedirs(p, exist_ok=True) for p in ['data/peer1/shared','data/peer1/downloaded','data/peer2/shared','data/peer2/downloaded','logs/peer1','logs/peer2','logs/server','evaluation/results']]"
+	$(PYTHON) -c "import os; [os.makedirs(p, exist_ok=True) for p in ['data/peer1/shared','data/peer1/downloaded','data/peer1/replicated','data/peer2/shared','data/peer2/downloaded','data/peer2/replicated','logs/peer1','logs/peer2','logs/server','evaluation/results']]"
 
 clean:
 	$(PYTHON) -c "import shutil, os; [shutil.rmtree(p, ignore_errors=True) for p in ['data','logs','evaluation/results']]"

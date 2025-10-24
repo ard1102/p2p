@@ -133,8 +133,8 @@ class PeerClient:
                     src_port = src.get("port")
                     if not fname or not src_host or not src_port:
                         continue
-                    # Replicate into shared directory
-                    dest_dir = self.file_manager.get_shared_dir(self.peer_id)
+                    # Replicate into replicated directory
+                    dest_dir = self.file_manager.get_replicated_dir(self.peer_id)
                     try:
                         self.replicate_file(src_host, int(src_port), fname, dest_dir=dest_dir)
                     except Exception as e:
@@ -261,8 +261,8 @@ class PeerClient:
         dest_dir: Optional[str] = None,
         timeout: Optional[float] = 30.0,
     ) -> Tuple[str, int, float]:
-        """Download a file using REPLICATE_REQUEST into the peer's shared directory by default."""
-        dest_dir = dest_dir or self.file_manager.get_shared_dir(self.peer_id)
+        """Download a file using REPLICATE_REQUEST into the peer's replicated directory by default."""
+        dest_dir = dest_dir or self.file_manager.get_replicated_dir(self.peer_id)
         os.makedirs(dest_dir, exist_ok=True)
         dest_path = os.path.join(dest_dir, file_name)
 

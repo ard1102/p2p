@@ -21,11 +21,13 @@
     "peers": {
       "peer1": {
         "shared_dir": "data/peer1/shared",
-        "download_dir": "data/peer1/downloaded"
+        "download_dir": "data/peer1/downloaded",
+        "replicated_dir": "data/peer1/replicated"
       },
       "peer2": {
         "shared_dir": "data/peer2/shared",
-        "download_dir": "data/peer2/downloaded"
+        "download_dir": "data/peer2/downloaded",
+        "replicated_dir": "data/peer2/replicated"
       }
     },
     "file_generation": {

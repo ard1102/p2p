@@ -27,15 +27,18 @@
     "peers": {
       "peer1": {
         "shared_dir": "data/peer1/shared",
-        "download_dir": "data/peer1/downloaded"
+        "download_dir": "data/peer1/downloaded",
+        "replicated_dir": "data/peer1/replicated"
       },
       "peer2": {
         "shared_dir": "data/peer2/shared",
-        "download_dir": "data/peer2/downloaded"
+        "download_dir": "data/peer2/downloaded",
+        "replicated_dir": "data/peer2/replicated"
       },
       "peer_eval_replica": {
         "shared_dir": "data/peer_eval_replica/shared",
-        "download_dir": "data/peer_eval_replica/downloaded"
+        "download_dir": "data/peer_eval_replica/downloaded",
+        "replicated_dir": "data/peer_eval_replica/replicated"
       }
     },
     "file_generation": {

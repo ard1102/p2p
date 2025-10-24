@@ -59,6 +59,38 @@ class FileManager:
                     continue
         return files
 
+    def list_downloaded_files(self, peer_id: str) -> Dict[str, Dict[str, int]]:
+        """Return mapping of file_name -> meta (size_bytes) in the peer's downloaded dir."""
+        dirs = self._peer_dirs(peer_id)
+        download_dir = dirs.get("download_dir")
+        self._ensure_dirs([download_dir])
+        files: Dict[str, Dict[str, int]] = {}
+        for name in os.listdir(download_dir):
+            path = os.path.join(download_dir, name)
+            if os.path.isfile(path):
+                try:
+                    size = os.path.getsize(path)
+                    files[name] = {"size_bytes": int(size)}
+                except OSError:
+                    continue
+        return files
+
+    def list_replicated_files(self, peer_id: str) -> Dict[str, Dict[str, int]]:
+        """Return mapping of file_name -> meta (size_bytes) in the peer's replicated dir."""
+        dirs = self._peer_dirs(peer_id)
+        replicated_dir = dirs.get("replicated_dir")
+        self._ensure_dirs([replicated_dir])
+        files: Dict[str, Dict[str, int]] = {}
+        for name in os.listdir(replicated_dir):
+            path = os.path.join(replicated_dir, name)
+            if os.path.isfile(path):
+                try:
+                    size = os.path.getsize(path)
+                    files[name] = {"size_bytes": int(size)}
+                except OSError:
+                    continue
+        return files
+
     def generate_files(self, peer_id: str, dataset_types: Optional[List[str]] = None) -> None:
         """Create files for the given peer.
 
@@ -113,6 +145,10 @@ class FileManager:
 
     def get_download_dir(self, peer_id: str) -> str:
         return self._peer_dirs(peer_id).get("download_dir")
+
+    def get_replicated_dir(self, peer_id: str) -> str:
+        """Get the replicated directory path for a peer."""
+        return self._peer_dirs(peer_id).get("replicated_dir")
 
     def read_file_chunks(self, peer_id: str, file_name: str, chunk_size: Optional[int] = None):
         """Yield chunks from a file in the peer's shared directory."""

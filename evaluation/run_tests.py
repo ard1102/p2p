@@ -196,12 +196,12 @@ def run_replication_test(config_path: str, new_peer_id: str = "peer_eval_replica
     metrics = MetricsCollector()
     client = PeerClient(peer_id=new_peer_id, file_manager=fm, metrics=metrics, config_path=config_path)
 
-    # Ensure clean shared directory for the test peer
-    shared_dir = fm.get_shared_dir(new_peer_id)
-    os.makedirs(shared_dir, exist_ok=True)
+    # Ensure clean replicated directory for the test peer (replication now targets replicated_dir)
+    replicated_dir = fm.get_replicated_dir(new_peer_id)
+    os.makedirs(replicated_dir, exist_ok=True)
     try:
-        for name in os.listdir(shared_dir):
-            path = os.path.join(shared_dir, name)
+        for name in os.listdir(replicated_dir):
+            path = os.path.join(replicated_dir, name)
             if os.path.isfile(path):
                 os.remove(path)
     except Exception:
@@ -211,12 +211,12 @@ def run_replication_test(config_path: str, new_peer_id: str = "peer_eval_replica
     payload = client.register_with_server(peer_ip=None, peer_port=None)
     tasks = payload.get("replication_tasks", [])
 
-    # Verify replicated files exist
+    # Verify replicated files exist in replicated_dir
     file_names = [t.get("file_name") for t in tasks if isinstance(t, dict) and t.get("file_name")]
     replicated = []
     missing = []
     for fn in file_names:
-        if os.path.isfile(os.path.join(shared_dir, fn)):
+        if os.path.isfile(os.path.join(replicated_dir, fn)):
             replicated.append(fn)
         else:
             missing.append(fn)

@@ -59,11 +59,15 @@ class CommandHandler:
             return self._download(args[0])
         if cmd == "list":
             if not args:
-                return "Usage: list local"
+                return "Usage: list <local|downloaded|replicated>"
             sub = args[0].lower()
             if sub == "local":
                 return self._list_local()
-            return "Unknown list target. Try: list local"
+            if sub == "downloaded":
+                return self._list_downloaded()
+            if sub == "replicated":
+                return self._list_replicated()
+            return "Unknown list target. Try: list local, list downloaded, or list replicated"
         if cmd == "stats":
             return self._stats()
         if cmd == "exit":
@@ -78,6 +82,8 @@ class CommandHandler:
             "  lookup <filename>        - Search for file\n"
             "  download <filename>      - Download file from a discovered peer\n"
             "  list local               - List files in shared directory\n"
+            "  list downloaded          - List files in downloaded directory\n"
+            "  list replicated          - List files in replicated directory\n"
             "  stats                    - Show performance statistics\n"
             "  exit                     - Quit CLI\n"
         )
@@ -127,6 +133,26 @@ class CommandHandler:
         if not files:
             return "No local files in shared directory."
         out_lines = [f"Local shared files ({len(files)}):"]
+        for name, meta in files.items():
+            out_lines.append(f"  - {name} ({meta.get('size_bytes', '?')} bytes)")
+        return "\n".join(out_lines)
+
+    def _list_downloaded(self) -> str:
+        """List files in the downloaded directory."""
+        files = self.fm.list_downloaded_files(self.peer_id)
+        if not files:
+            return "No downloaded files."
+        out_lines = [f"Downloaded files ({len(files)}):"]
+        for name, meta in files.items():
+            out_lines.append(f"  - {name} ({meta.get('size_bytes', '?')} bytes)")
+        return "\n".join(out_lines)
+
+    def _list_replicated(self) -> str:
+        """List files in the replicated directory."""
+        files = self.fm.list_replicated_files(self.peer_id)
+        if not files:
+            return "No replicated files."
+        out_lines = [f"Replicated files ({len(files)}):"]
         for name, meta in files.items():
             out_lines.append(f"  - {name} ({meta.get('size_bytes', '?')} bytes)")
         return "\n".join(out_lines)

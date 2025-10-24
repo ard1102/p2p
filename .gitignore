@@ -36,3 +36,5 @@ Thumbs.db
 # Node, UI, or other common extras (future-proofing)
 node_modules/
 *.log
+
+changes_Required.txt

@@ -101,9 +101,16 @@ class PeerServer:
                     pass
                 return
 
+            # Resolve file path in shared or replicated dir
             shared_dir = self.file_manager.get_shared_dir(self.peer_id)
-            path = os.path.join(shared_dir, file_name)
-            if not os.path.isfile(path):
+            replicated_dir = self.file_manager.get_replicated_dir(self.peer_id)
+            path: Optional[str] = None
+            for d in (shared_dir, replicated_dir):
+                candidate = os.path.join(d, file_name)
+                if os.path.isfile(candidate):
+                    path = candidate
+                    break
+            if not path:
                 resp_type = REPLICATE_RESPONSE if mtype == REPLICATE_REQUEST else OBTAIN_RESPONSE
                 resp = ProtocolHandler.create_message(
                     resp_type,
@@ -147,12 +154,14 @@ class PeerServer:
                 self.logger.warning(f"Send metadata error to {addr}: {e}")
                 return
 
-            # Stream file data
+            # Stream file data from resolved path
             try:
-                for chunk in self.file_manager.read_file_chunks(self.peer_id, file_name, chunk_size):
-                    if not chunk:
-                        break
-                    conn.sendall(chunk)
+                with open(path, "rb") as f:
+                    while True:
+                        data = f.read(chunk_size)
+                        if not data:
+                            break
+                        conn.sendall(data)
                 self.logger.info(
                     f"Completed transfer '{file_name}' to {addr[0]}:{addr[1]} ({file_size} bytes)"
                 )
